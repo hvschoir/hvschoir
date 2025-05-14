@@ -959,6 +959,45 @@ section,
   color: var(--accent-color);
 }
 
+.video-thumbnail-wrapper {
+  position: relative;
+  max-height: 320px;
+  overflow: hidden;
+}
+
+.video-thumbnail-wrapper img {
+  object-fit: cover;
+  height: 100%;
+}
+
+.play-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 4rem;
+  color: #ffffff;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
+  animation: pulse 1.8s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+
+  50% {
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 0.7;
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}
+
 .about .read-more {
   background: var(--accent-color);
   color: var(--contrast-color);
