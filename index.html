@@ -16,7 +16,7 @@
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Poppins:wght@400;600&family=Raleway:wght@400;600&display=swap"
     rel="stylesheet">
 
   <!-- Vendor CSS Files -->
@@ -28,17 +28,40 @@
 
   <!-- Main CSS File -->
   <link href="assets/css/main.css" rel="stylesheet">
+
+  <!-- ✅ Netlify Identity Widget -->
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
+  <!-- ✅ Inline CSS for User Name Responsiveness -->
+  <style>
+    #user-name {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 150px;
+      display: inline-block;
+    }
+
+    @media (max-width: 768px) {
+      #user-name {
+        display: block;
+        margin-top: 10px;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
 </head>
 
 <body class="index-page">
 
+  <!-- Header -->
   <header id="header" class="header d-flex align-items-center sticky-top">
     <div class="container-fluid container-xl position-relative d-flex align-items-center">
-  
+
       <a href="index.html" class="logo d-flex align-items-center me-auto">
         <h1 class="sitename">hvs</h1>
       </a>
-  
+
       <nav id="navmenu" class="navmenu">
         <ul>
           <li><a href="index.html">Home</a></li>
@@ -54,14 +77,14 @@
         </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>
-  
-      <!-- Auth Buttons -->
+
+      <!-- ✅ Auth Buttons -->
       <a class="btn-getstarted" href="#" id="login-btn">Login / Sign Up</a>
       <a class="btn-getstarted d-none" href="#" id="logout-btn">Logout</a>
-  
-      <!-- User Name Display -->
+
+      <!-- ✅ User Name Display -->
       <span id="user-name" class="text-light ms-3"></span>
-  
+
     </div>
   </header>
   
@@ -499,42 +522,59 @@
   <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
 
   <!-- Main JS File -->
-  <script src="assets/js/main.js"></script>
+<script src="assets/js/main.js"></script>
 
-  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
-  <script>
-    netlifyIdentity.on("init", user => {
-      if (!user) {
-        netlifyIdentity.on("login", user => {
-          console.log("Logged in", user);
-          document.getElementById("user-name").innerText = user.user_metadata.full_name || user.email;
-          document.getElementById("login-btn").classList.add("d-none");
-          document.getElementById("logout-btn").classList.remove("d-none");
-        });
-      }
+<!-- Netlify Identity Widget -->
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
+<script>
+  // Initialize Netlify Identity
+  if (window.netlifyIdentity) {
+    window.netlifyIdentity.on("init", user => {
+      updateUserUI(user);
     });
-  
-    netlifyIdentity.on("logout", () => {
-      console.log("Logged out");
-      document.getElementById("user-name").innerText = '';
-      document.getElementById("login-btn").classList.remove("d-none");
-      document.getElementById("logout-btn").classList.add("d-none");
+
+    window.netlifyIdentity.on("login", user => {
+      updateUserUI(user);
+      window.netlifyIdentity.close(); // close modal after login
     });
-  
-    document.getElementById("login-btn").addEventListener("click", function (e) {
-      e.preventDefault();
-      netlifyIdentity.open();
+
+    window.netlifyIdentity.on("logout", () => {
+      updateUserUI(null);
     });
-  
-    document.getElementById("logout-btn").addEventListener("click", function (e) {
-      e.preventDefault();
-      netlifyIdentity.logout();
-    });
-  
-    netlifyIdentity.init();
-  </script>
-  
+  }
+
+  // UI logic to show/hide buttons and display name
+  function updateUserUI(user) {
+    const loginBtn = document.getElementById("login-btn");
+    const logoutBtn = document.getElementById("logout-btn");
+    const userName = document.getElementById("user-name");
+
+    if (user) {
+      loginBtn.classList.add("d-none");
+      logoutBtn.classList.remove("d-none");
+      userName.textContent = `Welcome, ${user.user_metadata.full_name || user.email}`;
+    } else {
+      loginBtn.classList.remove("d-none");
+      logoutBtn.classList.add("d-none");
+      userName.textContent = "";
+    }
+  }
+
+  // Button handlers
+  document.getElementById("login-btn").addEventListener("click", function (e) {
+    e.preventDefault();
+    window.netlifyIdentity.open("login");
+  });
+
+  document.getElementById("logout-btn").addEventListener("click", function (e) {
+    e.preventDefault();
+    window.netlifyIdentity.logout();
+  });
+
+  // Init the widget
+  netlifyIdentity.init();
+</script>
 
 </body>
-
 </html>
