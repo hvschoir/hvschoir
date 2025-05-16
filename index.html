@@ -527,53 +527,6 @@
 <!-- Netlify Identity Widget -->
 <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 
-<script>
-  // Initialize Netlify Identity
-  if (window.netlifyIdentity) {
-    window.netlifyIdentity.on("init", user => {
-      updateUserUI(user);
-    });
-
-    window.netlifyIdentity.on("login", user => {
-      updateUserUI(user);
-      window.netlifyIdentity.close(); // close modal after login
-    });
-
-    window.netlifyIdentity.on("logout", () => {
-      updateUserUI(null);
-    });
-  }
-
-  // UI logic to show/hide buttons and display name
-  function updateUserUI(user) {
-    const loginBtn = document.getElementById("login-btn");
-    const logoutBtn = document.getElementById("logout-btn");
-    const userName = document.getElementById("user-name");
-
-    if (user) {
-      loginBtn.classList.add("d-none");
-      logoutBtn.classList.remove("d-none");
-      userName.textContent = `Welcome, ${user.user_metadata.full_name || user.email}`;
-    } else {
-      loginBtn.classList.remove("d-none");
-      logoutBtn.classList.add("d-none");
-      userName.textContent = "";
-    }
-  }
-
-  // Button handlers
-  document.getElementById("login-btn").addEventListener("click", function (e) {
-    e.preventDefault();
-    window.netlifyIdentity.open("login");
-  });
-
-  document.getElementById("logout-btn").addEventListener("click", function (e) {
-    e.preventDefault();
-    window.netlifyIdentity.logout();
-  });
-
-  // Init the widget
-  netlifyIdentity.init();
 </script>
 
 </body>
